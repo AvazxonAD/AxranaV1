@@ -66,7 +66,7 @@ exports.update = asyncHandler(async (req, res, next) => {
             return next(new ErrorResponse(`Bu usernamega ega user bor iltimos boshqa nomdan foydalaning: ${test.username}`, 403))
         }
     }
-    if(!user.password === oldPassword){
+    if(user.password !== oldPassword){
         return next(new ErrorResponse('Password xato kiritildi', 403))
     }
     // if(newPassword.length < 6 ){
@@ -82,7 +82,7 @@ exports.update = asyncHandler(async (req, res, next) => {
 exports.getProfile = asyncHandler(async (req, res, next) => {
     const user = await User.findById(req.user.id)
     if(user.adminStatus){
-        const users = await User.find()
+        const users = await User.find({adminStatus: false})
         return res.status(200).json({
             success: true,
             data: user,

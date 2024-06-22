@@ -1,7 +1,9 @@
 const asyncHandler = require("../middleware/asyncHandler");
 const ErrorResponse = require("../utils/errorResponse");
 const Pasport = require('../models/pasport.model')
-
+const Otryad = require('../models/otryad.model')
+const Location = require('../models/location.model')
+const Rank = require('../models/rank.model')
 
 // create new pasport danni 
 exports.create = asyncHandler(async (req, res, next) => {
@@ -66,5 +68,18 @@ exports.deleteWorker = asyncHandler(async (req, res, next) => {
     return res.status(200).json({
         success: true,
         data: "Delete"
+    })
+})
+
+// for page 
+exports.forPage = asyncHandler(async (req, res, next) => {
+    const otryads = await Otryad.find({parent: req.user.id})
+    const ranks = await Rank.find({parent: req.user.id})
+    const locations = await Location.find({parent: req.user.id})
+    return res.status(200).json({
+        success: true,
+        otryads,
+        ranks,
+        locations
     })
 })

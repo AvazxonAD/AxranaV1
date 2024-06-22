@@ -7,13 +7,15 @@ const {
     create,
     getAllworker,
     updateWorker,
-    deleteWorker
+    deleteWorker,
+    forPage
 } = require('../controller/pasport.controller')
 
 router.post('/create', protect, create)
 router.get('/get', protect, getAllworker)
 router.put('/update/:id', protect, updateWorker)
 router.delete("/delete/:id", protect, deleteWorker)
+router.get('/for/page', protect, forPage)
 
 module.exports = router
 
