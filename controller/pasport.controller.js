@@ -20,7 +20,7 @@ exports.create = asyncHandler(async (req, res, next) => {
             FIOkril: worker.FIOkril,
             selectRank: worker.selectRank,
             selectRankSumma: worker.selectRankSumma,
-            selectRegion: worker.selecTRegion,
+            selectRegion: worker.selectRegion,
             selectOtryad: worker.selectOtryad,
             parent: req.user.id 
         })
@@ -30,3 +30,33 @@ exports.create = asyncHandler(async (req, res, next) => {
         data: "Kiritildi"
     })
 })
+
+// get all workers 
+exports.getAllworker = asyncHandler(async (req, res, next) => {
+    const workers = await Pasport.find({parent: req.user.id})
+    return res.status(200).json({
+        success: true, 
+        data: workers
+    })
+})
+
+// update worker 
+exports.updateWorker = asyncHandler(async (req, res, next) => {
+    const { FIOlotin, FIOkril, selectRank, selectRankSumma, selectRegion, selectOtryad } = req.body
+    if(!FIOlotin || !FIOkril || !selectRank  || !selectRankSumma || !selectRegion || !selectOtryad){
+        return next(new ErrorResponse('sorovlar bosh qolishi mumkin emas', 403))
+    }
+    const updateWorker = await Pasport.findByBIdAndUpdate(req.params.id, {
+        FIOlotin,  
+        FIOkril, 
+        selectRank, 
+        selectRankSumma, 
+        selectRegion, 
+        selectOtryad
+    }, {new : true})
+    return res.status(200).json({
+        success: true,
+        data: updateWorker
+    })
+})
+

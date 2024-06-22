@@ -5,6 +5,10 @@ const rankSchema = new  mongoose.Schema({
         type: String,
         required: true
     },
+    summa: {
+        type: Number,
+        required: true
+    },
     parent: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"

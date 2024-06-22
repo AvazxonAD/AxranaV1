@@ -17,7 +17,7 @@ const pasportSchema = new  mongoose.Schema({
         type: Number,
         required: true
     },
-    seelctRegion: {
+    selectRegion: {
         type: String,
         required: true
     },
@@ -25,7 +25,7 @@ const pasportSchema = new  mongoose.Schema({
         type: String,
         required: true
     },
-    user: {
+    parent: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     }
