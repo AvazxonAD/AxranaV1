@@ -46,7 +46,7 @@ exports.updateWorker = asyncHandler(async (req, res, next) => {
     if(!FIOlotin || !FIOkril || !selectRank  || !selectRankSumma || !selectRegion || !selectOtryad){
         return next(new ErrorResponse('sorovlar bosh qolishi mumkin emas', 403))
     }
-    const updateWorker = await Pasport.findByBIdAndUpdate(req.params.id, {
+    const updateWorker = await Pasport.findByIdAndUpdate(req.params.id, {
         FIOlotin,  
         FIOkril, 
         selectRank, 
@@ -60,3 +60,11 @@ exports.updateWorker = asyncHandler(async (req, res, next) => {
     })
 })
 
+// delete worker
+exports.deleteWorker = asyncHandler(async (req, res, next) => {
+    const worker = await Pasport.findByIdAndDelete(req.params.id)
+    return res.status(200).json({
+        success: true,
+        data: "Delete"
+    })
+})
