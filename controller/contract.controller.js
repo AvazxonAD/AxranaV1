@@ -1,6 +1,7 @@
 const asyncHandler = require('../middleware/asyncHandler')
 const ErrorResponse = require('../utils/errorResponse')
 const Contract = require('../models/contract.model')
+const Pasport = require('../models/pasport.model')
 
 // create conract 
 exports.create = asyncHandler(async (req, res, next) => {
@@ -75,5 +76,22 @@ exports.deleteContract = asyncHandler(async (req, res, next) => {
     return res.status(200).json({
         success: true,
         data: "Delete"
+    })
+})
+
+// for page 
+exports.forPage = asyncHandler(async (req, res, next) => {
+    let workers = null
+    if(req.query.query === "uz"){
+        workers = await Pasport.find({parent: req.user.id}).select("-_id FIOlotin")
+        return res.status(200).json({
+            success: true,
+            data: workers
+        })
+    }
+    workers = await Pasport.find({parent: req.user.id}).select("-_id FIOkril")
+        return res.status(200).json({
+            success: true,
+            data: workers
     })
 })

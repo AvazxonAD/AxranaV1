@@ -4,6 +4,7 @@ const Pasport = require('../models/pasport.model')
 const Otryad = require('../models/otryad.model')
 const Location = require('../models/location.model')
 const Rank = require('../models/rank.model')
+const checkFile = require('../utils/upload')
 
 // create new pasport danni 
 exports.create = asyncHandler(async (req, res, next) => {
@@ -85,3 +86,7 @@ exports.forPage = asyncHandler(async (req, res, next) => {
 })
 
 // create worker with excel
+exports.createExcelData = asyncHandler(async (req, res, next) => {
+    console.log(req.file)
+
+})

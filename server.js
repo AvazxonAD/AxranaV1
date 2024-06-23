@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path')
 const cors = require('cors');
 const app = express();
 require('dotenv').config();
@@ -10,7 +11,9 @@ require('./config/db')();
 require('./utils/create.Admin')();
 
 app.use(express.json());
-app.use(cors()); // Bu yerda cors() funksiyasi chaqirilyapti
+app.use(express.urlencoded({extended: false}))
+app.use(express.static(path.join(__dirname, './public')))
+app.use(cors())
 
 app.use('/auth', require('./router/auth.router'));
 app.use('/rank', require('./router/rank.router'));
