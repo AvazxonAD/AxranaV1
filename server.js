@@ -21,6 +21,7 @@ app.use('/location', require('./router/location.router'));
 app.use('/otryad', require('./router/otryad.router'));
 app.use('/worker', require('./router/pasport.router'));
 app.use('/contract', require('./router/contract.router'))
+app.use("/result", require("./router/result.router"))
 
 app.use(require('./middleware/errorHandler'));
 

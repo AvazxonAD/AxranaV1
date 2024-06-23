@@ -1,25 +1,39 @@
 const asyncHandler = require('../middleware/asyncHandler')
 const ErrorResponse = require('../utils/errorResponse')
 const Contract = require('../models/contract.model')
-const Pasport = require('../models/pasport.model')
+const Worker = require('../models/pasport.model')
 
 // create conract 
 exports.create = asyncHandler(async (req, res, next) => {
-    const { contractDate, contractTurnOffDate, contractSumma, content, name, inn, address, accountNumber, bankName, workers } = req.body
-    if( !contractDate || !contractTurnOffDate || !contractSumma || !content || !name || !inn || !address ||!accountNumber || !bankName || !workers || workers.length < 1 ){
-        return next(new ErrorResponse('sorovlar bosh qolishi mumkin emas', 403))  
+    const { contractDate, contractTurnOffDate, contractSumma, content, name, inn, address, accountNumber, bankName, workers, contractNumber, phone } = req.body
+    if (!contractDate || !contractTurnOffDate || !contractSumma || !content || !name || !inn || !address || !accountNumber || !bankName || !workers || workers.length < 1 || !contractNumber || !phone) {
+        return next(new ErrorResponse('sorovlar bosh qolishi mumkin emas', 403))
+    }
+    if (req.query.query === 'ru') {
+        for (let worker of workers) {
+            const id = await Worker.findOne({ FIOkril: worker.worker }).select("_id")
+            worker.worker = id._id
+        }
+    }
+    if(req.query.query === 'uz') {
+        for (let worker of workers) {
+            const id = await Worker.findOne({ FIOlotin: worker.worker }).select("_id")
+            worker.worker = id
+        }
     }
     const newContract = await Contract.create({
-        contractDate, 
-        contractTurnOffDate, 
-        contractSumma, 
-        content, 
-        name, 
-        inn, 
-        address, 
-        accountNumber, 
-        bankName, 
+        contractDate,
+        contractTurnOffDate,
+        contractSumma,
+        content,
+        name,
+        inn,
+        address,
+        accountNumber,
+        bankName,
         workers,
+        contractNumber,
+        phone,
         parent: req.user.id
     })
     return res.status(200).json({
@@ -39,7 +53,7 @@ exports.getById = asyncHandler(async (req, res, next) => {
 
 // get all contract 
 exports.getAllContract = asyncHandler(async (req, res, next) => {
-    const contracts = await Contract.find({parent: req.user.id})
+    const contracts = await Contract.find({ parent: req.user.id })
     return res.status(200).json({
         success: true,
         data: contracts
@@ -47,23 +61,25 @@ exports.getAllContract = asyncHandler(async (req, res, next) => {
 })
 
 // update contract
-exports.update = asyncHandler(async (req, res,next) => {
-    const { contractDate, contractTurnOffDate, contractSumma, content, name, inn, address, accountNumber, bankName, workers } = req.body
-    if( !contractDate || !contractTurnOffDate || !contractSumma || !content || !name || !inn || !address ||!accountNumber || !bankName || !workers || workers.length < 1 ){
-        return next(new ErrorResponse('sorovlar bosh qolishi mumkin emas', 403))  
+exports.update = asyncHandler(async (req, res, next) => {
+    const { contractDate, contractTurnOffDate, contractSumma, content, name, inn, address, accountNumber, bankName, workers, contractNumber, phone } = req.body
+    if (!contractDate || !contractTurnOffDate || !contractSumma || !content || !name || !inn || !address || !accountNumber || !bankName || !workers || workers.length < 1 || !contractNumber || !phone) {
+        return next(new ErrorResponse('sorovlar bosh qolishi mumkin emas', 403))
     }
     const updateContract = await Contract.findByIdAndUpdate(req.params.id, {
-        contractDate, 
-        contractTurnOffDate, 
-        contractSumma, 
-        content, 
-        name, 
-        inn, 
-        address, 
-        accountNumber, 
-        bankName, 
-        workers
-    }, {new: true})  
+        contractDate,
+        contractTurnOffDate,
+        contractSumma,
+        content,
+        name,
+        inn,
+        address,
+        accountNumber,
+        bankName,
+        workers,
+        contractNumber,
+        phone
+    }, { new: true })
     return res.status(200).json({
         success: true,
         data: updateContract
@@ -82,16 +98,16 @@ exports.deleteContract = asyncHandler(async (req, res, next) => {
 // for page 
 exports.forPage = asyncHandler(async (req, res, next) => {
     let workers = null
-    if(req.query.query === "uz"){
-        workers = await Pasport.find({parent: req.user.id}).select("-_id FIOlotin")
+    if (req.query.query === "uz") {
+        workers = await Worker.find({ parent: req.user.id }).select("-_id FIOlotin")
         return res.status(200).json({
             success: true,
             data: workers
         })
     }
-    workers = await Pasport.find({parent: req.user.id}).select("-_id FIOkril")
-        return res.status(200).json({
-            success: true,
-            data: workers
+    workers = await Worker.find({ parent: req.user.id }).select("-_id FIOkril")
+    return res.status(200).json({
+        success: true,
+        data: workers
     })
 })

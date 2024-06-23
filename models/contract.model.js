@@ -2,6 +2,14 @@ const mongoose = require('mongoose');
 
 // Shakllangan schema
 const contractSchema = new mongoose.Schema({
+    contractNumber: {
+        type: String,
+        required: true
+    },
+    phone: {
+        type: String,
+        required: true
+    },
     contractDate: {
         type: Date, // Sanani formatlash
         required: true
@@ -43,9 +51,9 @@ const contractSchema = new mongoose.Schema({
     },
     workers: [
         {
-            username: {
-                type: String,
-                required: true
+            worker: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Pasport"
             },
             dayOrHour: {
                 type: Number,
