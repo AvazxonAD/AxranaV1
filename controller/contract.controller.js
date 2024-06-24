@@ -67,9 +67,14 @@ exports.update = asyncHandler(async (req, res, next) => {
     if (!contractDate || !contractTurnOffDate || !contractSumma || !content || !name || !inn || !address || !accountNumber || !bankName || !workers || workers.length < 1 || !contractNumber || !phone) {
         return next(new ErrorResponse('sorovlar bosh qolishi mumkin emas', 403))
     }
+    for(let worker of workers){
+        if(!worker.worker || !worker.dayOrHour || !worker.timeType){
+            return next(new ErrorResponse('sorovlar bosh qolishi mumkin emas', 403))
+        }
+    }
     const updateContract = await Contract.findByIdAndUpdate(req.params.id, {
-        contractDate,
-        contractTurnOffDate,
+        contractDate: new Date(contractDate),
+        contractTurnOffDate: new Date(contractTurnOffDate),
         contractSumma,
         content,
         name,
