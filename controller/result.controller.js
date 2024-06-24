@@ -8,13 +8,19 @@ exports.result = asyncHandler(async (req, res, next) => {
     const contracts = await Contract.find({
         parent: req.user.id,
     }).sort({ createdAt: 1 }).select("-_id -parent -createdAt -updatedAt -__v");
-
+    
     const promises = contracts.map(async (contract) => {
         const result = [];
         for (let id of contract.workers) {
-            const worker = await Worker.findById(id.worker);
+            let worker = null
+            if(req.query.query === 'uz'){
+                worker = await Worker.findById(id.worker).select("-_id -FIOkril")
+            }
+            if(req.query.query === 'ru'){
+                worker = await Worker.findById(id.worker).select("-_id -FIOlotin")
+            }
             result.push({
-                FIOlotin: worker.FIOlotin,
+                FIOlotin: worker.FIOlotin, 
                 FIOkril: worker.FIOkril,
                 rank: worker.selectRank,
                 rankSumma: worker.selectRankSumma,
@@ -68,7 +74,13 @@ exports.filter = asyncHandler(async (req, res, next) => {
     const promises = contracts.map(async (contract) => {
         const result = [];
         for (let id of contract.workers) {
-            const worker = await Worker.findById(id.worker);
+            let worker = null
+            if(req.query.query === 'uz'){
+                worker = await Worker.findById(id.worker).select("-_id -FIOkril")
+            }
+            if(req.query.query === 'ru'){
+                worker = await Worker.findById(id.worker).select("-_id -FIOlotin")
+            }
             result.push({
                 FIOlotin: worker.FIOlotin,
                 FIOkril: worker.FIOkril,
@@ -105,4 +117,7 @@ exports.filter = asyncHandler(async (req, res, next) => {
     });    
 })
 // create excel 
-
+exports.excelCreate = asyncHandler(async (req, res, next) => {
+    const {json_data} = req.body
+    
+})
