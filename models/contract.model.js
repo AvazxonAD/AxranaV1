@@ -41,6 +41,10 @@ const contractSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    boss: {
+        type: String,
+        required: true
+    },
     accountNumber: {
         type: String, // Bank hisob raqami string sifatida saqlanadi
         required: true
@@ -69,7 +73,7 @@ const contractSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     }
-});
+}, {timestamps: true});
 
 // Modelni eksport qilish
 module.exports = mongoose.model("Contract", contractSchema);

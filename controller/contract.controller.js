@@ -5,8 +5,8 @@ const Worker = require('../models/pasport.model')
 
 // create conract 
 exports.create = asyncHandler(async (req, res, next) => {
-    const { contractDate, contractTurnOffDate, contractSumma, content, name, inn, address, accountNumber, bankName, workers, contractNumber, phone } = req.body
-    if (!contractDate || !contractTurnOffDate || !contractSumma || !content || !name || !inn || !address || !accountNumber || !bankName || !workers || workers.length < 1 || !contractNumber || !phone) {
+    const { contractDate, contractTurnOffDate, contractSumma, content, name, inn, address, accountNumber, bankName, workers, contractNumber, phone, boss } = req.body
+    if (!contractDate || !contractTurnOffDate || !contractSumma || !content || !name || !inn || !address || !accountNumber || !bankName || !workers || workers.length < 1 || !contractNumber || !phone || !boss) {
         return next(new ErrorResponse('sorovlar bosh qolishi mumkin emas', 403))
     }
     if (req.query.query === 'ru') {
@@ -34,7 +34,8 @@ exports.create = asyncHandler(async (req, res, next) => {
         workers,
         contractNumber,
         phone,
-        parent: req.user.id
+        parent: req.user.id,
+        boss
     })
     return res.status(200).json({
         success: true,
